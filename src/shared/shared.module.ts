@@ -1,8 +1,12 @@
 import { Global, Module } from '@nestjs/common'
 import { PrismaService } from 'src/shared/service/prisma.service'
+import { HashingService } from './service/hashing.service'
+import { TokenService } from './service/token.service'
+import { JwtModule } from '@nestjs/jwt'
 @Global()
 @Module({
-  providers: [PrismaService],
-  exports: [PrismaService],
+  providers: [PrismaService, HashingService, TokenService],
+  exports: [PrismaService, HashingService],
+  imports: [JwtModule],
 })
 export class SharedModule {}
