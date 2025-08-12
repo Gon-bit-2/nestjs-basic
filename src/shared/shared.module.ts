@@ -6,7 +6,7 @@ import { JwtModule } from '@nestjs/jwt'
 @Global()
 @Module({
   providers: [PrismaService, HashingService, TokenService],
-  exports: [PrismaService, HashingService],
+  exports: [PrismaService, HashingService, TokenService],
   imports: [JwtModule],
 })
 export class SharedModule {}
