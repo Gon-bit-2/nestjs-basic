@@ -7,3 +7,10 @@ export class RefreshTokenBody {
 }
 
 export class RefreshTokenBodyResDto extends LoginResDto {}
+export class LogoutAuthDto extends RefreshTokenBody {}
+export class LogoutResDto {
+  message: string
+  constructor(partial: Partial<LogoutResDto>) {
+    Object.assign(this, partial)
+  }
+}

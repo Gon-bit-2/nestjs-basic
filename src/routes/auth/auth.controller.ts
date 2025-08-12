@@ -1,10 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, UseGuards } from '@nestjs/common'
+import { Controller, Post, Body, Delete, HttpCode, UseGuards } from '@nestjs/common'
 import { AuthService } from './auth.service'
 import { CreateAuthDto } from './dto/create-auth.dto'
-import { UpdateAuthDto } from './dto/update-auth.dto'
 import { Auth } from 'src/routes/auth/entities/auth.entity'
 import { LoginAuthDto, LoginResDto } from 'src/routes/auth/dto/login-auth.dto'
-import { RefreshTokenBody, RefreshTokenBodyResDto } from 'src/routes/auth/dto/refreshtoken-auth.dto'
+import {
+  LogoutAuthDto,
+  LogoutResDto,
+  RefreshTokenBody,
+  RefreshTokenBodyResDto,
+} from 'src/routes/auth/dto/refreshtoken-auth.dto'
 import { AccessTokenGuard } from 'src/shared/guard/access-token.guard'
 
 @Controller('auth')
@@ -28,18 +32,10 @@ export class AuthController {
     const result = await this.authService.refreshToken(refreshTokenBody.token)
     return new RefreshTokenBodyResDto(result)
   }
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    // return this.authService.findOne(+id)
-  }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAuthDto: UpdateAuthDto) {
-    return this.authService.update(+id, updateAuthDto)
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.authService.remove(+id)
+  @Post('logout')
+  async logout(@Body() logoutAuthDto: LogoutAuthDto) {
+    const result = await this.authService.logout(logoutAuthDto.token)
+    return new LogoutResDto(result)
   }
 }

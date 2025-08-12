@@ -7,6 +7,7 @@ import { XApiKeyGuard } from 'src/shared/guard/x-api-key.guard'
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
   @Get()
+  @UseGuards(AccessTokenGuard)
   getPosts() {
     return this.postsService.getPosts()
   }

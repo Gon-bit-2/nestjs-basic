@@ -1,6 +1,5 @@
 import { BadRequestException, Injectable, UnauthorizedException, UnprocessableEntityException } from '@nestjs/common'
 import { CreateAuthDto } from './dto/create-auth.dto'
-import { UpdateAuthDto } from './dto/update-auth.dto'
 import { HashingService } from 'src/shared/service/hashing.service'
 import { PrismaService } from 'src/shared/service/prisma.service'
 import { TokenService } from 'src/shared/service/token.service'
@@ -102,8 +101,27 @@ export class AuthService {
     }
   }
 
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`
+  async logout(refreshToken: string) {
+    try {
+      //check exists
+      await this.prismaService.refreshToken.findUniqueOrThrow({
+        where: {
+          token: refreshToken,
+        },
+      })
+
+      await this.prismaService.refreshToken.delete({
+        where: {
+          token: refreshToken,
+        },
+      })
+      return { message: 'Logout Successfully' }
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2025') throw new UnauthorizedException('RefreshTToken has been revoked')
+      }
+      throw new UnauthorizedException('Invalid refresh token')
+    }
   }
 
   remove(id: number) {
