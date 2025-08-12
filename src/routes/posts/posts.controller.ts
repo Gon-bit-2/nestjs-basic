@@ -1,5 +1,7 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common'
 import { PostsService } from 'src/routes/posts/posts.service'
+import { AccessTokenGuard } from 'src/shared/guard/access-token.guard'
+import { XApiKeyGuard } from 'src/shared/guard/x-api-key.guard'
 
 @Controller('posts')
 export class PostsController {
@@ -9,6 +11,8 @@ export class PostsController {
     return this.postsService.getPosts()
   }
   @Post()
+  @UseGuards(AccessTokenGuard)
+  @UseGuards(XApiKeyGuard)
   createPosts(@Body() body: any) {
     return this.postsService.createPosts(body)
   }

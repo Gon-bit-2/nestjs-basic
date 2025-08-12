@@ -1,10 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode } from '@nestjs/common'
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, UseGuards } from '@nestjs/common'
 import { AuthService } from './auth.service'
 import { CreateAuthDto } from './dto/create-auth.dto'
 import { UpdateAuthDto } from './dto/update-auth.dto'
 import { Auth } from 'src/routes/auth/entities/auth.entity'
 import { LoginAuthDto, LoginResDto } from 'src/routes/auth/dto/login-auth.dto'
 import { RefreshTokenBody, RefreshTokenBodyResDto } from 'src/routes/auth/dto/refreshtoken-auth.dto'
+import { AccessTokenGuard } from 'src/shared/guard/access-token.guard'
 
 @Controller('auth')
 export class AuthController {
@@ -22,6 +23,7 @@ export class AuthController {
   }
   @Post('refresh-token')
   @HttpCode(200)
+  @UseGuards(AccessTokenGuard)
   async refreshToken(@Body() refreshTokenBody: RefreshTokenBody) {
     const result = await this.authService.refreshToken(refreshTokenBody.token)
     return new RefreshTokenBodyResDto(result)
